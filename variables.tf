@@ -10,6 +10,12 @@ variable "kubernetes_context" {
   description = "kubernetes context to operate with"
 }
 
+variable "cert_directory" {
+  type        = string
+  default     = "/tmp/certs"
+  description = "path to directory for client user certs"
+}
+
 variable "users" {
   type = map(object({
     role = string

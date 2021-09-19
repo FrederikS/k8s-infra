@@ -1,13 +1,3 @@
-variable "name" {
-  type        = string
-  description = "name of the user"
-}
-
-variable "role" {
-  type        = string
-  description = "role for the user"
-}
-
 resource "tls_private_key" "user" {
   algorithm = "RSA"
   rsa_bits  = 2048

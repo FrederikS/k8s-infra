@@ -32,8 +32,9 @@ resource "kubernetes_role" "developer" {
 }
 
 module "user" {
-  source   = "./modules/user"
-  for_each = var.users
-  name     = each.key
-  role     = each.value.role
+  source         = "./modules/user"
+  for_each       = var.users
+  name           = each.key
+  role           = each.value.role
+  cert_directory = var.cert_directory
 }
