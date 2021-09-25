@@ -15,6 +15,10 @@ terraform {
   }
 }
 
+module "system" {
+  source = "./modules/system"
+}
+
 provider "kubernetes" {
   config_path    = var.kubernetes_config_path
   config_context = var.kubernetes_context
