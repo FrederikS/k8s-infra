@@ -1,18 +1,18 @@
 variable "kubernetes_config_path" {
   type        = string
-  default     = "~/.kube/config"
+  default     = "/etc/rancher/k3s/k3s.yaml"
   description = "path to kubernetes config"
 }
 
 variable "kubernetes_context" {
   type        = string
-  default     = "pi-admin"
+  default     = "default"
   description = "kubernetes context to operate with"
 }
 
 variable "cert_directory" {
   type        = string
-  default     = "/tmp/certs"
+  default     = "/var/lib/rancher/k3s/server/tls"
   description = "path to directory for client user certs"
 }
 
