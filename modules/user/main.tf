@@ -18,17 +18,20 @@ resource "tls_cert_request" "user" {
   }
 }
 
-resource "kubernetes_certificate_signing_request" "user" {
+resource "kubernetes_certificate_signing_request_v1" "user" {
   metadata {
     name = var.name
   }
   spec {
-    request = tls_cert_request.user.cert_request_pem
+    signer_name = "kubernetes.io/kube-apiserver-client"
+    usages      = ["client auth"]
+    request     = tls_cert_request.user.cert_request_pem
   }
+  auto_approve = true
 }
 
 resource "local_file" "user_tls_crt" {
-  content              = kubernetes_certificate_signing_request.user.certificate
+  content              = kubernetes_certificate_signing_request_v1.user.certificate
   filename             = "${var.cert_directory}/${var.name}.crt"
   file_permission      = "644"
   directory_permission = "700"
