@@ -3,9 +3,9 @@ variable "name" {
   description = "name of the user"
 }
 
-variable "role" {
+variable "group" {
   type        = string
-  description = "role for the user"
+  description = "group for the user"
 }
 
 variable "cert_directory" {

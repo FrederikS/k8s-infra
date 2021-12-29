@@ -14,7 +14,8 @@ resource "tls_cert_request" "user" {
   key_algorithm   = "RSA"
   private_key_pem = tls_private_key.user.private_key_pem
   subject {
-    common_name = var.name
+    common_name  = var.name
+    organization = var.group
   }
 }
 
@@ -30,25 +31,20 @@ resource "kubernetes_certificate_signing_request_v1" "user" {
   auto_approve = true
 }
 
+resource "kubernetes_secret" "user" {
+  metadata {
+    name = var.name
+  }
+  data = {
+    "tls.crt" = kubernetes_certificate_signing_request_v1.user.certificate
+    "tls.key" = tls_private_key.user.private_key_pem
+  }
+  type = "kubernetes.io/tls"
+}
+
 resource "local_file" "user_tls_crt" {
   content              = kubernetes_certificate_signing_request_v1.user.certificate
   filename             = "${var.cert_directory}/${var.name}.crt"
   file_permission      = "644"
   directory_permission = "700"
-}
-
-resource "kubernetes_role_binding" "user" {
-  metadata {
-    name = "role-binding-${var.name}"
-  }
-  role_ref {
-    api_group = "rbac.authorization.k8s.io"
-    kind      = "Role"
-    name      = var.role
-  }
-  subject {
-    kind      = "User"
-    name      = var.name
-    api_group = "rbac.authorization.k8s.io"
-  }
 }

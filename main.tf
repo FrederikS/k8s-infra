@@ -31,10 +31,26 @@ resource "kubernetes_role" "developer" {
   }
 }
 
+resource "kubernetes_role_binding" "developer" {
+  metadata {
+    name = "role-binding-developer"
+  }
+  role_ref {
+    api_group = "rbac.authorization.k8s.io"
+    kind      = "Role"
+    name      = "developer"
+  }
+  subject {
+    kind      = "Group"
+    name      = "devs"
+    api_group = "rbac.authorization.k8s.io"
+  }
+}
+
 module "user" {
   source         = "./modules/user"
   for_each       = var.users
   name           = each.key
-  role           = each.value.role
+  group          = each.value.group
   cert_directory = var.cert_directory
 }

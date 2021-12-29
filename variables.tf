@@ -1,29 +1,29 @@
 variable "kubernetes_config_path" {
   type        = string
-  default     = "/etc/rancher/k3s/k3s.yaml"
+  default     = "~/.kube/config"
   description = "path to kubernetes config"
 }
 
 variable "kubernetes_context" {
   type        = string
-  default     = "default"
+  default     = "pi-admin"
   description = "kubernetes context to operate with"
 }
 
 variable "cert_directory" {
   type        = string
-  default     = "/var/lib/rancher/k3s/server/tls"
+  default     = "/tmp/certs"
   description = "path to directory for client user certs"
 }
 
 variable "users" {
   type = map(object({
-    role = string
+    group = string
   }))
   description = "users with cluster access"
   default = {
     frederik = {
-      role = "developer"
+      group = "devs"
     }
   }
 }
