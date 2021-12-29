@@ -12,6 +12,12 @@ provider "kubernetes" {
   config_context = var.kubernetes_context
 }
 
+module "helm" {
+  source                 = "./helm"
+  kubernetes_config_path = var.kubernetes_config_path
+  kubernetes_context     = var.kubernetes_context
+}
+
 module "roles" {
   source = "./roles"
 }
