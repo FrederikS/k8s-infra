@@ -1,3 +1,16 @@
+terraform {
+  required_providers {
+    tls = {
+      source  = "hashicorp/tls"
+      version = "3.1.0"
+    }
+    local = {
+      source  = "hashicorp/local"
+      version = "2.1.0"
+    }
+  }
+}
+
 resource "tls_private_key" "user" {
   algorithm = "RSA"
   rsa_bits  = 2048
