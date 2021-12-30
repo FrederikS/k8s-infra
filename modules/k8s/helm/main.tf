@@ -48,3 +48,17 @@ resource "helm_release" "istiod" {
     }
   }
 }
+
+resource "helm_release" "istio_ingress" {
+  namespace        = "istio-ingress"
+  create_namespace = true
+  name             = "istio-ingress"
+  repository       = var.istio.repository
+  chart            = "gateway"
+  version          = var.istio.version
+
+  set {
+    name  = "service.type"
+    value = "NodePort"
+  }
+}

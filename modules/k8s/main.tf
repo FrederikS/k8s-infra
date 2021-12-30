@@ -28,3 +28,7 @@ module "user" {
   name     = each.key
   group    = each.value.group
 }
+
+module "httpbin" {
+  source = "./httpbin"
+}
