@@ -52,5 +52,6 @@ terraform.rc
 # Ignore all local history of files
 .history
 .ionide
+certs
 
 # End of https://www.toptal.com/developers/gitignore/api/terraform,visualstudiocode

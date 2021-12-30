@@ -10,6 +10,6 @@ variable "group" {
 
 variable "cert_directory" {
   type        = string
-  default     = "/tmp/certs"
+  default     = "./certs"
   description = "path to directory for client user certs"
 }

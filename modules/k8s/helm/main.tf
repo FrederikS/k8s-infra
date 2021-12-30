@@ -19,13 +19,16 @@ resource "helm_release" "istio-base" {
   namespace        = "istio-system"
   create_namespace = true
   name             = "istio-base"
-  repository       = "https://istio-release.storage.googleapis.com/charts"
+  repository       = var.istio.repository
   chart            = "base"
-  version          = "1.12.1"
+  version          = var.istio.version
 
-  set {
-    name  = "global.hub"
-    value = "docker.io/querycapistio"
+  dynamic "set" {
+    for_each = var.istio.values
+    content {
+      name  = set.key
+      value = set.value
+    }
   }
 }
 
@@ -33,12 +36,15 @@ resource "helm_release" "istiod" {
   namespace        = "istio-system"
   create_namespace = true
   name             = "istiod"
-  repository       = "https://istio-release.storage.googleapis.com/charts"
+  repository       = var.istio.repository
   chart            = "istiod"
-  version          = "1.12.1"
+  version          = var.istio.version
 
-  set {
-    name  = "global.hub"
-    value = "docker.io/querycapistio"
+  dynamic "set" {
+    for_each = var.istio.values
+    content {
+      name  = set.key
+      value = set.value
+    }
   }
 }
