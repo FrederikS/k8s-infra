@@ -20,6 +20,13 @@ module "istio" {
 }
 
 module "k8s-dashboard" {
-  source     = "./k8s-dashboard"
-  depends_on = [module.istio]
+  source = "./k8s-dashboard"
+}
+
+module "prometheus" {
+  source = "./prometheus"
+}
+
+module "grafana" {
+  source = "./grafana"
 }

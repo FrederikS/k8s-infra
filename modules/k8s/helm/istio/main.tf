@@ -43,3 +43,9 @@ resource "helm_release" "istio_ingress" {
   version          = var.istio.version
   depends_on       = [helm_release.istiod]
 }
+
+resource "kubernetes_manifest" "istio_gateway" {
+  for_each   = fileset(path.module, "gateway/*")
+  manifest   = yamldecode(file("${path.module}/${each.value}"))
+  depends_on = [helm_release.istio-base]
+}

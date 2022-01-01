@@ -1,0 +1,8 @@
+
+resource "helm_release" "prometheus" {
+  name       = "prometheus"
+  namespace  = "istio-system"
+  repository = "https://prometheus-community.github.io/helm-charts"
+  chart      = "prometheus"
+  version    = "15.0.2"
+}
