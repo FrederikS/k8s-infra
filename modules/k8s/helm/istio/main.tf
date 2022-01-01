@@ -44,6 +44,7 @@ resource "helm_release" "istio_ingress" {
   depends_on       = [helm_release.istiod]
 }
 
+# https://github.com/hashicorp/terraform-provider-kubernetes/issues/1367
 resource "kubernetes_manifest" "istio_gateway" {
   for_each   = fileset(path.module, "gateway/*")
   manifest   = yamldecode(file("${path.module}/${each.value}"))

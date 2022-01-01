@@ -17,17 +17,18 @@ provider "grafana" {
 }
 
 resource "helm_release" "grafana" {
-  name       = "grafana"
-  namespace  = "istio-system"
-  repository = "https://grafana.github.io/helm-charts"
-  chart      = "grafana"
-  version    = "6.20.3"
+  name             = "grafana"
+  namespace        = "monitoring"
+  create_namespace = true
+  repository       = "https://grafana.github.io/helm-charts"
+  chart            = "grafana"
+  version          = "6.20.3"
 }
 
 data "kubernetes_secret" "grafana" {
   metadata {
     name      = "grafana"
-    namespace = "istio-system"
+    namespace = "monitoring"
   }
   depends_on = [helm_release.grafana]
 }
