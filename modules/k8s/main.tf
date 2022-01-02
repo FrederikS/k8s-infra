@@ -13,9 +13,10 @@ provider "kubernetes" {
 }
 
 module "helm" {
-  source                 = "./helm"
-  kubernetes_config_path = var.kubernetes_config_path
-  kubernetes_context     = var.kubernetes_context
+  source                      = "./helm"
+  kubernetes_config_path      = var.kubernetes_config_path
+  kubernetes_context          = var.kubernetes_context
+  certmanager_aws_credentials = var.certmanager_aws_credentials
 }
 
 module "roles" {

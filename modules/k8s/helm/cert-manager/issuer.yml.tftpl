@@ -1,0 +1,24 @@
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: letsencrypt
+  namespace: cert-manager
+spec:
+  acme:
+    email: frederik.steffen@gmail.com
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: istio-ingress-certs
+    solvers:
+      - selector:
+          dnsZones:
+            - "fdk.codes"
+        dns01:
+          route53:
+            region: ${region}
+            hostedZoneID: ${zone_id}
+            role: ${role}
+            accessKeyID: ${access_key_id}
+            secretAccessKeySecretRef:
+              name: cert-manager-aws-credentials
+              key: secret_access_key

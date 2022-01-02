@@ -15,6 +15,11 @@ provider "helm" {
   }
 }
 
+module "cert-manager" {
+  source                      = "./cert-manager"
+  certmanager_aws_credentials = var.certmanager_aws_credentials
+}
+
 module "istio" {
   source = "./istio"
 }
