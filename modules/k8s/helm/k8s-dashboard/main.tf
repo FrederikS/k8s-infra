@@ -5,6 +5,27 @@ resource "helm_release" "kubernetes_dashboard" {
   repository = "https://kubernetes.github.io/dashboard/"
   chart      = "kubernetes-dashboard"
   version    = "5.0.5"
+
+  set {
+    name  = "extraArgs[0]"
+    value = "--enable-insecure-login"
+  }
+
+  set {
+    name  = "extraArgs[1]"
+    value = "--insecure-port=9090"
+  }
+
+  set {
+    name  = "service.externalPort"
+    value = "80"
+  }
+
+  set {
+    name = "protocolHttp"
+    value = "true"
+  }
+
 }
 
 resource "kubernetes_service_account" "admin_user" {

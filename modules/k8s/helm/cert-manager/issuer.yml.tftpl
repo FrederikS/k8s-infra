@@ -1,18 +1,18 @@
 apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
-  name: letsencrypt
-  namespace: cert-manager
+  name: letsencrypt-prod
+  namespace: istio-ingress
 spec:
   acme:
     email: frederik.steffen@gmail.com
     server: https://acme-v02.api.letsencrypt.org/directory
     privateKeySecretRef:
-      name: istio-ingress-certs
+      name: letsencrypt-prod
     solvers:
       - selector:
           dnsZones:
-            - "fdk.codes"
+            - fdk.codes
         dns01:
           route53:
             region: ${region}

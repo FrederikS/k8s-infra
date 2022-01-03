@@ -8,12 +8,9 @@ spec:
     - "k8s-dashboard.fdk.codes"
   gateways:
     - kubernetes-dashboard-gateway
-  tls:
-    - match:
-        - sniHosts:
-            - k8s-dashboard.fdk.codes
-      route:
+  http:
+    - route:
         - destination:
             port:
-              number: 443
+              number: 80
             host: kubernetes-dashboard

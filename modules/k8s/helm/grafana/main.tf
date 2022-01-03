@@ -9,7 +9,7 @@ terraform {
 }
 
 provider "grafana" {
-  url = "http://grafana.fdk.codes/"
+  url = "https://grafana.fdk.codes/"
   auth = format("%s:%s",
     data.kubernetes_secret.grafana.data["admin-user"],
     data.kubernetes_secret.grafana.data["admin-password"]

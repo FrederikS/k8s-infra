@@ -2,10 +2,11 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: fdk-codes
-  namespace: cert-manager
+  namespace: istio-ingress
 spec:
   secretName: fdk-codes-tls
   issuerRef:
-    name: letsencrypt
+    name: letsencrypt-prod
   dnsNames:
     - "*.fdk.codes"
+    - fdk.codes

@@ -72,7 +72,7 @@ resource "helm_release" "cert_manager" {
 resource "kubernetes_secret" "aws_cert_manager_credientials" {
   metadata {
     name      = "cert-manager-aws-credentials"
-    namespace = "cert-manager"
+    namespace = "istio-ingress"
   }
 
   data = {
