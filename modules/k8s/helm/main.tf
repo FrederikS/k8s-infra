@@ -35,3 +35,15 @@ module "prometheus" {
 module "grafana" {
   source = "./grafana"
 }
+
+module "elasticsearch" {
+  source = "./elasticsearch"
+}
+
+module "fluentd" {
+  source = "./fluentd"
+}
+
+module "kibana" {
+  source = "./kibana"
+}

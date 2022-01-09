@@ -1,0 +1,16 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: kibana
+  namespace: logging
+spec:
+  hosts:
+    - "logs.fdk.codes"
+  gateways:
+    - kibana-gateway
+  http:
+    - route:
+        - destination:
+            port:
+              number: 5601
+            host: kibana
