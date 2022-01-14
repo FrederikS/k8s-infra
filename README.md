@@ -37,3 +37,9 @@
 the beginning so that planing is failing. Work around comment
 [this](./modules/k8s/helm/istio/main.tf#L48-L52) on initial run.
 Related [issue](https://github.com/hashicorp/terraform-provider-kubernetes/issues/1367)
+
+
+## TODO
+
+- fluentd config logs
+- remove k8s-dashboard
