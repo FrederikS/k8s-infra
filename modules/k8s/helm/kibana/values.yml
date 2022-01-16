@@ -17,3 +17,7 @@ extraEnvs:
       secretKeyRef:
         name: elastic-credentials
         key: password
+
+kibanaConfig:
+  kibana.yml: |
+    server.publicBaseUrl: "https://logs.fdk.codes"
