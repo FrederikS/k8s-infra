@@ -14,10 +14,6 @@ env:
         key: password
   - name: FLUENTD_SYSTEMD_CONF
     value: disable
-  - name: FLUENT_ELASTICSEARCH_TEMPLATE_FILE
-    value: /etc/fluent/config.d/elasticsearch/index_template.json
-  - name: FLUENT_ELASTICSEARCH_TEMPLATE_NAME
-    value: "logstash-default"
 
 volumes:
   - name: varlog
@@ -34,10 +30,6 @@ volumes:
     configMap:
       name: fluentd-config
       defaultMode: 0777
-  - name: fluentd-elasticsearch
-    configMap:
-      name: fluentd-elasticsearch
-      defaultMode: 0777
 
 volumeMounts:
   - name: varlog
@@ -49,8 +41,6 @@ volumeMounts:
     mountPath: /etc/fluent
   - name: etcfluentd-config
     mountPath: /etc/fluent/config.d/
-  - name: fluentd-elasticsearch
-    mountPath: /etc/fluent/config.d/elasticsearch/
 
 fileConfigs:
   01_sources.conf: |-

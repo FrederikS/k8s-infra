@@ -7,7 +7,7 @@ variable "istio" {
   })
   default = {
     repository = "https://istio-release.storage.googleapis.com/charts"
-    version    = "1.12.1"
+    version    = "1.13.1"
     values = {
       "global.hub" = "docker.io/querycapistio"
     }

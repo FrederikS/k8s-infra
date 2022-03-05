@@ -11,9 +11,29 @@ terraform {
 provider "grafana" {
   url = "https://grafana.fdk.codes/"
   auth = format("%s:%s",
-    data.kubernetes_secret.grafana.data["admin-user"],
-    data.kubernetes_secret.grafana.data["admin-password"]
+    random_id.grafana_username.id,
+    random_password.grafana_password.result
   )
+}
+
+resource "random_id" "grafana_username" {
+  byte_length = 8
+}
+
+resource "random_password" "grafana_password" {
+  length = 16
+}
+
+resource "kubernetes_secret" "grafana_credentials" {
+  metadata {
+    name      = "grafana-credentials"
+    namespace = "monitoring"
+  }
+
+  data = {
+    username = random_id.grafana_username.id
+    password = random_password.grafana_password.result
+  }
 }
 
 resource "helm_release" "grafana" {
@@ -22,15 +42,23 @@ resource "helm_release" "grafana" {
   create_namespace = true
   repository       = "https://grafana.github.io/helm-charts"
   chart            = "grafana"
-  version          = "6.20.3"
-}
-
-data "kubernetes_secret" "grafana" {
-  metadata {
-    name      = "grafana"
-    namespace = "monitoring"
+  version          = "6.23.2"
+  set {
+    name  = "admin.existingSecret"
+    value = "grafana-credentials"
   }
-  depends_on = [helm_release.grafana]
+
+  set {
+    name  = "admin.userKey"
+    value = "username"
+  }
+
+  set {
+    name  = "admin.passwordKey"
+    value = "password"
+  }
+
+  depends_on = [kubernetes_secret.grafana_credentials]
 }
 
 resource "grafana_data_source" "prometheus" {
@@ -48,4 +76,5 @@ resource "grafana_data_source" "prometheus" {
 resource "grafana_dashboard" "dashboard" {
   for_each    = fileset(path.module, "dashboard/*")
   config_json = file("${path.module}/${each.value}")
+  depends_on  = [helm_release.grafana]
 }

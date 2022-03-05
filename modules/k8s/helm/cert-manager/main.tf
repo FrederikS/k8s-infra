@@ -61,7 +61,7 @@ resource "helm_release" "cert_manager" {
   create_namespace = true
   repository       = "https://charts.jetstack.io"
   chart            = "cert-manager"
-  version          = "1.6.1"
+  version          = "1.7.1"
 
   set {
     name  = "installCRDs"
@@ -90,6 +90,7 @@ resource "kubernetes_manifest" "issuer" {
       "access_key_id" : var.certmanager_aws_credentials.access_key_id
     }
   ))
+  depends_on = [aws_iam_role.dns_manager]
 }
 
 resource "kubernetes_manifest" "cert" {

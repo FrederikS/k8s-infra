@@ -25,7 +25,8 @@ resource "helm_release" "elasticsearch" {
   create_namespace = true
   repository       = "https://helm.elastic.co"
   chart            = "elasticsearch"
-  version          = "7.16.2"
+  version          = "7.16.3"
   values           = ["${file("${path.module}/values.yml")}"]
+  timeout          = 500
   depends_on       = [kubernetes_secret.elastic_credentials]
 }
