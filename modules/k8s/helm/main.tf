@@ -24,10 +24,6 @@ module "istio" {
   source = "./istio"
 }
 
-module "k8s-dashboard" {
-  source = "./k8s-dashboard"
-}
-
 module "prometheus" {
   source = "./prometheus"
 }
