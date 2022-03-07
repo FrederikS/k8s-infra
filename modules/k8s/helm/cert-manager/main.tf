@@ -96,3 +96,12 @@ resource "kubernetes_manifest" "issuer" {
 resource "kubernetes_manifest" "cert" {
   manifest = yamldecode(file("${path.module}/cert.yml"))
 }
+
+resource "kubernetes_manifest" "selfsigned_issuer" {
+  manifest = yamldecode(file("${path.module}/selfsigned_issuer.yml"))
+}
+
+resource "kubernetes_manifest" "elasticsearch" {
+  manifest   = yamldecode(file("${path.module}/elasticsearch.yml"))
+  depends_on = [kubernetes_manifest.selfsigned_issuer]
+}

@@ -1,4 +1,6 @@
 # Allocate smaller chunks of memory per pod.
+elasticsearchHosts: "https://elasticsearch-master:9200"
+
 resources:
   requests:
     cpu: "100m"
@@ -21,3 +23,21 @@ extraEnvs:
 kibanaConfig:
   kibana.yml: |
     server.publicBaseUrl: "https://logs.fdk.codes"
+    # server.ssl.enabled: true
+    # server.ssl.certificate: /usr/share/kibana/config/certs/tls.crt
+    # server.ssl.key: /usr/share/kibana/config/certs/tls.key
+    elasticsearch:
+      hosts: ${ELASTICSEARCH_HOSTS}
+      username: ${ELASTICSEARCH_USERNAME}
+      password: ${ELASTICSEARCH_PASSWORD}
+      # ssl:
+      #   key: /usr/share/kibana/config/certs/tls.key
+      #   certificate: /usr/share/kibana/config/certs/tls.crt
+      #   certificateAuthorities: /usr/share/kibana/config/certs/ca.crt
+      #   verificationMode: certificate
+
+secretMounts:
+  - name: elastic-certificates
+    secretName: es-cert
+    path: /usr/share/kibana/config/certs
+    defaultMode: 0755

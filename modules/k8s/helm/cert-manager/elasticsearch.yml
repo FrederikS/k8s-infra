@@ -1,0 +1,18 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: es-cert
+  namespace: logging
+spec:
+  isCA: true
+  dnsNames:
+    - elasticsearch-master
+    - elasticsearch-master.logging.svc
+    - elasticsearch-master.logging.svc.cluster.local
+  issuerRef:
+    kind: Issuer
+    name: selfsigned-issuer
+  secretName: es-cert
+  subject:
+    organizations:
+      - elasticsearch-master
