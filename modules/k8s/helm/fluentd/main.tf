@@ -10,6 +10,6 @@ resource "helm_release" "fluentd" {
 
   set {
     name  = "image.tag"
-    value = "v1-debian-elasticsearch-arm64"
+    value = "v1-debian-elasticsearch7-arm64"
   }
 }
