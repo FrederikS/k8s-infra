@@ -101,7 +101,18 @@ resource "kubernetes_manifest" "selfsigned_issuer" {
   manifest = yamldecode(file("${path.module}/selfsigned_issuer.yml"))
 }
 
-resource "kubernetes_manifest" "elasticsearch" {
-  manifest   = yamldecode(file("${path.module}/elasticsearch.yml"))
+resource "kubernetes_manifest" "es_root_ca_cert" {
+  manifest   = yamldecode(file("${path.module}/logging/root_ca_cert.yml"))
   depends_on = [kubernetes_manifest.selfsigned_issuer]
+}
+
+resource "kubernetes_manifest" "es_root_ca_issuer" {
+  manifest   = yamldecode(file("${path.module}/logging/root_ca_issuer.yml"))
+  depends_on = [kubernetes_manifest.es_root_ca_cert]
+}
+
+resource "kubernetes_manifest" "es_cert" {
+  manifest        = yamldecode(file("${path.module}/logging/elasticsearch_cert.yml"))
+  computed_fields = ["spec.isCA"]
+  depends_on      = [kubernetes_manifest.es_root_ca_issuer]
 }

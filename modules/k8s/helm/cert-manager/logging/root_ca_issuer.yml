@@ -1,0 +1,8 @@
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: root-ca-issuer
+  namespace: logging
+spec:
+  ca:
+    secretName: root-ca-secret

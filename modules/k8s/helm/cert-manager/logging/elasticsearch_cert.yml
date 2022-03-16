@@ -4,14 +4,21 @@ metadata:
   name: es-cert
   namespace: logging
 spec:
-  isCA: true
+  isCA: false
+  privateKey:
+    algorithm: RSA
+    encoding: PKCS1
+    size: 2048
   dnsNames:
     - elasticsearch-master
     - elasticsearch-master.logging.svc
     - elasticsearch-master.logging.svc.cluster.local
+    - elasticsearch-master-headless
+    - elasticsearch-master-headless.logging.svc
+    - elasticsearch-master-headless.logging.svc.cluster.local
   issuerRef:
     kind: Issuer
-    name: selfsigned-issuer
+    name: root-ca-issuer
   secretName: es-cert
   subject:
     organizations:
