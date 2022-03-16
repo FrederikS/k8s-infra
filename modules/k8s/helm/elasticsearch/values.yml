@@ -13,16 +13,16 @@ extraEnvs:
         key: password
 
 # Shrink default JVM heap.
-esJavaOpts: "-Xmx128m -Xms128m"
+esJavaOpts: "-Xmx256m -Xms256m"
 
 # Allocate smaller chunks of memory per pod.
 resources:
   requests:
     cpu: "100m"
-    memory: "512M"
+    memory: "1G"
   limits:
     cpu: "1000m"
-    memory: "512M"
+    memory: "1G"
 
 # Request smaller persistent volumes.
 volumeClaimTemplate:
@@ -46,6 +46,7 @@ esConfig:
     xpack.security.http.ssl.key: /usr/share/elasticsearch/config/certs/tls.key
     xpack.security.http.ssl.certificate: /usr/share/elasticsearch/config/certs/tls.crt
     xpack.security.http.ssl.certificate_authorities: /usr/share/elasticsearch/config/certs/ca.crt
+    # bootstrap.memory_lock: true
 
 secretMounts:
   - name: elastic-certificates
