@@ -1,0 +1,22 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: fluentd-cert
+  namespace: logging
+spec:
+  isCA: false
+  privateKey:
+    algorithm: RSA
+    encoding: PKCS1
+    size: 2048
+  dnsNames:
+    - fluentd
+    - fluentd.logging.svc
+    - fluentd.logging.svc.cluster.local
+  issuerRef:
+    kind: Issuer
+    name: root-ca-issuer
+  secretName: fluentd-cert
+  subject:
+    organizations:
+      - fluentd

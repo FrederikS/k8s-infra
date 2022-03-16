@@ -30,6 +30,9 @@ volumes:
     configMap:
       name: fluentd-config
       defaultMode: 0777
+  - name: fluentd-certificates
+    secret:
+      secretName: fluentd-cert
 
 volumeMounts:
   - name: varlog
@@ -41,6 +44,9 @@ volumeMounts:
     mountPath: /etc/fluent
   - name: etcfluentd-config
     mountPath: /etc/fluent/config.d/
+  - name: fluentd-certificates
+    mountPath: /etc/fluent/elasticsearch/config/certs
+    readOnly: true
 
 fileConfigs:
   01_sources.conf: |-
@@ -139,13 +145,18 @@ fileConfigs:
     <label @OUTPUT>
       <match **>
         @type elasticsearch
+        scheme https
         host "#{ENV['FLUENT_ELASTICSEARCH_HOST']}"
         port "#{ENV['FLUENT_ELASTICSEARCH_PORT']}"
         user "#{ENV['FLUENT_ELASTICSEARCH_USER']}"
         password "#{ENV['FLUENT_ELASTICSEARCH_PASSWORD']}"
+        client_key /etc/fluent/elasticsearch/config/certs/tls.key
+        client_cert /etc/fluent/elasticsearch/config/certs/tls.crt
+        ca_file /etc/fluent/elasticsearch/config/certs/ca.crt
         template_name "#{ENV['FLUENT_ELASTICSEARCH_TEMPLATE_NAME'] || use_nil}"
         template_file "#{ENV['FLUENT_ELASTICSEARCH_TEMPLATE_FILE'] || use_nil}"
         logstash_format true
+        logstash_prefix kubernetes
         default_elasticsearch_version 7
       </match>
     </label>
