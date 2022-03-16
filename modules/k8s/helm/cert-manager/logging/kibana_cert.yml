@@ -1,0 +1,24 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: kibana-cert
+  namespace: logging
+spec:
+  isCA: false
+  privateKey:
+    algorithm: RSA
+    encoding: PKCS1
+    size: 2048
+  dnsNames:
+    - kibana
+    - kibana.logging.svc
+    - kibana.logging.svc.cluster.local
+    - logs.fdk.codes
+  issuerRef:
+    kind: Issuer
+    name: root-ca-issuer
+  secretName: kibana-cert
+  subject:
+    organizations:
+      - kibana
+      - logs

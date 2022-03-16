@@ -116,3 +116,9 @@ resource "kubernetes_manifest" "es_cert" {
   computed_fields = ["spec.isCA"]
   depends_on      = [kubernetes_manifest.es_root_ca_issuer]
 }
+
+resource "kubernetes_manifest" "kibana_cert" {
+  manifest        = yamldecode(file("${path.module}/logging/kibana_cert.yml"))
+  computed_fields = ["spec.isCA"]
+  depends_on      = [kubernetes_manifest.es_root_ca_issuer]
+}

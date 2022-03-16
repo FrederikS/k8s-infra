@@ -12,32 +12,40 @@ resources:
 fullnameOverride: "kibana"
 
 extraEnvs:
+  # https://github.com/elastic/helm-charts/issues/1334
   - name: "ELASTICSEARCH_USERNAME"
     value: elastic
+    # valueFrom:
+    #   secretKeyRef:
+    #     name: elastic-credentials
+    #     key: username
   - name: "ELASTICSEARCH_PASSWORD"
     valueFrom:
       secretKeyRef:
         name: elastic-credentials
         key: password
+  - name: "KIBANA_ENCRYPTION_KEY"
+    valueFrom:
+      secretKeyRef:
+        name: kibana-credentials
+        key: encryptionkey
 
 kibanaConfig:
   kibana.yml: |
-    server.publicBaseUrl: "https://logs.fdk.codes"
-    # server.ssl.enabled: true
-    # server.ssl.certificate: /usr/share/kibana/config/certs/tls.crt
-    # server.ssl.key: /usr/share/kibana/config/certs/tls.key
+    server:
+      publicBaseUrl: "https://logs.fdk.codes"
     elasticsearch:
-      hosts: ${ELASTICSEARCH_HOSTS}
-      username: ${ELASTICSEARCH_USERNAME}
-      password: ${ELASTICSEARCH_PASSWORD}
-      # ssl:
-      #   key: /usr/share/kibana/config/certs/tls.key
-      #   certificate: /usr/share/kibana/config/certs/tls.crt
-      #   certificateAuthorities: /usr/share/kibana/config/certs/ca.crt
-      #   verificationMode: certificate
+      ssl:
+        key: /usr/share/kibana/config/certs/tls.key
+        certificate: /usr/share/kibana/config/certs/tls.crt
+        certificateAuthorities: /usr/share/kibana/config/certs/ca.crt
+        verificationMode: full
+    xpack.security.encryptionKey: ${KIBANA_ENCRYPTION_KEY}
+    xpack.reporting.encryptionKey: ${KIBANA_ENCRYPTION_KEY}
+    xpack.encryptedSavedObjects.encryptionKey: ${KIBANA_ENCRYPTION_KEY}
+    telemetry.enabled: false
 
 secretMounts:
-  - name: elastic-certificates
-    secretName: es-cert
+  - name: kibana-certificates
+    secretName: kibana-cert
     path: /usr/share/kibana/config/certs
-    defaultMode: 0755
