@@ -28,3 +28,8 @@ variable "certmanager_aws_credentials" {
     secret_access_key = string
   })
 }
+
+variable "github_token" {
+  type        = string
+  description = "token to be used for the github provider"
+}

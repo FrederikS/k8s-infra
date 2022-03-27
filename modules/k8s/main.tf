@@ -33,3 +33,8 @@ module "user" {
   name     = each.key
   group    = each.value.group
 }
+
+module "serviceaccounts" {
+  source       = "./serviceaccounts"
+  github_token = var.github_token
+}
