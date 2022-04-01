@@ -16,6 +16,10 @@ provider "kubernetes" {
   config_context = var.kubernetes_context
 }
 
+module "postgres" {
+  source = "./postgres"
+}
+
 module "helm" {
   source                      = "./helm"
   kubernetes_config_path      = var.kubernetes_config_path
