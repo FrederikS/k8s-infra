@@ -16,10 +16,6 @@ provider "kubernetes" {
   config_context = var.kubernetes_context
 }
 
-module "postgres" {
-  source = "./postgres"
-}
-
 module "helm" {
   source                      = "./helm"
   kubernetes_config_path      = var.kubernetes_config_path
@@ -41,4 +37,17 @@ module "user" {
 module "serviceaccounts" {
   source       = "./serviceaccounts"
   github_token = var.github_token
+}
+
+module "postgres" {
+  source = "./postgres"
+}
+
+module "olm" {
+  source = "./olm"
+}
+
+module "keycloak" {
+  source     = "./keycloak"
+  depends_on = [module.olm, module.postgres]
 }
