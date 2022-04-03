@@ -19,6 +19,12 @@ resource "kubernetes_manifest" "kubegres_operator" {
   computed_fields = ["metadata.creationTimestamp", "metadata.annotations", "metadata.labels"]
 }
 
+resource "kubernetes_namespace" "postgres" {
+  metadata {
+    name = "postgres"
+  }
+}
+
 resource "random_password" "postgres_super_user_password" {
   length = 24
 }
@@ -27,21 +33,45 @@ resource "random_password" "postgres_replication_user_password" {
   length = 24
 }
 
+resource "random_string" "postgres_keycloak_user" {
+  length  = 12
+  upper   = false
+  special = false
+  number  = false
+}
+
+resource "random_password" "postgres_keycloak_password" {
+  length = 24
+}
+
 resource "kubernetes_secret" "postgres_credentials" {
   metadata {
     name      = "postgres-credentials"
-    namespace = "default"
+    namespace = "postgres"
   }
 
   data = {
     superUserPassword       = random_password.postgres_super_user_password.result
     replicationUserPassword = random_password.postgres_replication_user_password.result
+    keycloakUser            = random_string.postgres_keycloak_user.id
+    keycloakPassword        = random_password.postgres_keycloak_password.result
   }
+
+  depends_on = [kubernetes_manifest.kubegres_namespace]
+}
+
+resource "kubernetes_manifest" "postgres_config" {
+  manifest   = yamldecode(file("${path.module}/postgres_config.yml"))
+  depends_on = [kubernetes_manifest.kubegres_namespace]
 }
 
 resource "kubernetes_manifest" "kubegres" {
-  manifest        = yamldecode(file("${path.module}/kubegres.yml"))
-  depends_on      = [kubernetes_manifest.kubegres_operator, kubernetes_secret.postgres_credentials]
+  manifest = yamldecode(file("${path.module}/kubegres.yml"))
+  depends_on = [
+    kubernetes_manifest.kubegres_operator,
+    kubernetes_secret.postgres_credentials,
+    kubernetes_manifest.postgres_config
+  ]
   computed_fields = ["spec.customConfig", "spec.scheduler", "metadata.annotations", "metadata.labels"]
 }
 

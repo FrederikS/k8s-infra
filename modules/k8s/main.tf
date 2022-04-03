@@ -43,11 +43,7 @@ module "postgres" {
   source = "./postgres"
 }
 
-module "olm" {
-  source = "./olm"
-}
-
 module "keycloak" {
   source     = "./keycloak"
-  depends_on = [module.olm, module.postgres]
+  depends_on = [module.postgres]
 }

@@ -2,7 +2,7 @@ apiVersion: kubegres.reactive-tech.io/v1
 kind: Kubegres
 metadata:
   name: postgres
-  namespace: default
+  namespace: postgres
 
 spec:
   replicas: 3
@@ -13,6 +13,8 @@ spec:
     size: 200Mi
     storageClassName: local-path
     volumeMount: /var/lib/postgresql/data
+
+  customConfig: postgres-conf
 
   env:
     - name: POSTGRES_PASSWORD
@@ -26,6 +28,21 @@ spec:
         secretKeyRef:
           name: postgres-credentials
           key: replicationUserPassword
+
+    - name: POSTGRES_KEYCLOAK_USER
+      valueFrom:
+        secretKeyRef:
+          name: postgres-credentials
+          key: keycloakUser
+
+    - name: POSTGRES_KEYCLOAK_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: postgres-credentials
+          key: keycloakPassword
+
+    - name: POSTGRES_KEYCLOAK_DB
+      value: keycloak
 
   resources:
     requests:
