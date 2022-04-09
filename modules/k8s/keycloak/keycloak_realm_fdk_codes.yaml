@@ -1,0 +1,16 @@
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakRealm
+metadata:
+  name: fdk-codes
+  namespace: keycloak
+  labels:
+    realm: fdk-codes
+spec:
+  realm:
+    id: "fdk-codes"
+    realm: "fdk-codes"
+    enabled: True
+    displayName: "fdk.codes"
+  instanceSelector:
+    matchLabels:
+      app: keycloak

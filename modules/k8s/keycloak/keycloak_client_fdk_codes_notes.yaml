@@ -1,0 +1,15 @@
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakClient
+metadata:
+  name: fdk-codes-notes
+  namespace: keycloak
+  labels:
+    client: fdk-codes-notes
+spec:
+  realmSelector:
+    matchLabels:
+      realm: fdk-codes
+  client:
+    clientId: fdk-codes-notes
+    clientAuthenticatorType: client-secret
+    protocol: openid-connect

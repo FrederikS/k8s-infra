@@ -12,6 +12,14 @@ spec:
   externalDatabase:
     enabled: True
 
+  keycloakDeploymentSpec:
+    experimental:
+      env:
+        - name: KC_PROXY
+          value: edge
+        - name: KC_HTTP_ENABLED
+          value: true
+
   #https://github.com/keycloak/keycloak-operator/issues/426
   # keycloakDeploymentSpec:
   #   experimental:

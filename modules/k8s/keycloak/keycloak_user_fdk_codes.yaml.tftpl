@@ -1,0 +1,22 @@
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakUser
+metadata:
+  name: fdk
+  namespace: keycloak
+spec:
+  user:
+    username: "fdk"
+    firstName: "Frederik"
+    lastName: "Steffen"
+    email: "fdk@fdk.codes"
+    enabled: True
+    emailVerified: True
+    credentials:
+      - type: "password"
+        value: ${fdk_user_password}
+    clientRoles:
+      account:
+        - "manage-account"
+  realmSelector:
+    matchLabels:
+      realm: fdk-codes
