@@ -46,4 +46,5 @@ module "kibana" {
 
 module "keycloak" {
   source = "./keycloak"
+  credentials = var.keycloak_client_credentials
 }

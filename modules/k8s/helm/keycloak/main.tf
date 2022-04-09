@@ -1,4 +1,19 @@
 
+terraform {
+  required_providers {
+    keycloak = {
+      source  = "mrparkers/keycloak"
+      version = "3.7.0"
+    }
+  }
+}
+
+provider "keycloak" {
+  client_id     = var.credentials.client_id
+  client_secret = var.credentials.client_secret
+  url           = "https://iam.fdk.codes"
+}
+
 locals {
   namespace = "keycloak"
 }
@@ -72,4 +87,12 @@ resource "helm_release" "keycloak" {
     kubernetes_secret.admin_credentials,
     kubernetes_secret.db_credentials
   ]
+}
+
+resource "keycloak_realm" "fdk_codes" {
+  realm        = "fdk-codes"
+  display_name = "fdk.codes"
+  ssl_required = "external"
+
+  depends_on = [helm_release.keycloak]
 }

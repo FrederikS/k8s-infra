@@ -21,6 +21,7 @@ module "helm" {
   kubernetes_config_path      = var.kubernetes_config_path
   kubernetes_context          = var.kubernetes_context
   certmanager_aws_credentials = var.certmanager_aws_credentials
+  keycloak_client_credentials = var.keycloak_client_credentials
 }
 
 module "roles" {
