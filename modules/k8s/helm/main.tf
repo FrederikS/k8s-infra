@@ -43,3 +43,7 @@ module "fluentd" {
 module "kibana" {
   source = "./kibana"
 }
+
+module "keycloak" {
+  source = "./keycloak"
+}
