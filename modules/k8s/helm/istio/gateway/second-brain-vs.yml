@@ -1,11 +1,11 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: keycloak
+  name: second-brain
   namespace: istio-ingress
 spec:
   hosts:
-    - "iam.fdk.codes"
+    - "notes.fdk.codes"
   gateways:
     - fdk-codes-gateway
   http:
@@ -13,4 +13,4 @@ spec:
         - destination:
             port:
               number: 80
-            host: keycloak-http.keycloak.svc.cluster.local
+            host: second-brain.default.svc.cluster.local

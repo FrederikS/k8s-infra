@@ -1,8 +1,8 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
-  name: grafana-gateway
-  namespace: monitoring
+  name: fdk-codes-gateway
+  namespace: istio-ingress
 spec:
   selector:
     istio: ingress
@@ -15,4 +15,4 @@ spec:
         mode: SIMPLE
         credentialName: fdk-codes-tls
       hosts:
-        - "grafana.fdk.codes"
+        - "*.fdk.codes"
