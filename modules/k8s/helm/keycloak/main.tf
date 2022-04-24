@@ -135,3 +135,22 @@ resource "keycloak_user" "fdk" {
   }
   depends_on = [keycloak_realm.fdk_codes]
 }
+
+resource "keycloak_role" "notes_webapp_access" {
+  realm_id = keycloak_realm.fdk_codes.id
+  name     = "notes-webapp-access"
+}
+
+resource "keycloak_user_roles" "fdk" {
+  realm_id = keycloak_realm.fdk_codes.id
+  user_id  = keycloak_user.fdk.id
+
+  role_ids = [
+    keycloak_role.notes_webapp_access.id
+  ]
+
+  depends_on = [
+    keycloak_user.fdk,
+    keycloak_role.notes_webapp_access
+  ]
+}
