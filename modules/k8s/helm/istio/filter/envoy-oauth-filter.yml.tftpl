@@ -1,12 +1,12 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: EnvoyFilter
 metadata:
-  name: notes-webapp-oauth-filter
+  name: ${name}
   namespace: istio-system
 spec:
   workloadSelector:
     labels:
-      app.kubernetes.io/name: second-brain
+      app.kubernetes.io/name: ${app_name}
   configPatches:
   - applyTo: HTTP_FILTER
     match:

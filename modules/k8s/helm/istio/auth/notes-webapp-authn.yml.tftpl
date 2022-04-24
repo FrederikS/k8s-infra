@@ -1,0 +1,12 @@
+apiVersion: security.istio.io/v1beta1
+kind: RequestAuthentication
+metadata:
+  name: second-brain
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: second-brain
+  jwtRules:
+    - issuer: ${issuer}
+      jwksUri: ${jwks_uri}
