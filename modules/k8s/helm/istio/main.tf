@@ -1,4 +1,18 @@
 
+terraform {
+  required_providers {
+    kubernetes = {
+      source = "hashicorp/kubernetes"
+    }
+    helm = {
+      source = "hashicorp/helm"
+    }
+    random = {
+      source = "hashicorp/random"
+    }
+  }
+}
+
 locals {
   internalKeycloakUrl = "http://keycloak-http.keycloak.svc.cluster.local"
   keycloakUrl         = "https://iam.fdk.codes"

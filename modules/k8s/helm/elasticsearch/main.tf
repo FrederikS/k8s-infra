@@ -1,4 +1,18 @@
 
+terraform {
+  required_providers {
+    kubernetes = {
+      source = "hashicorp/kubernetes"
+    }
+    helm = {
+      source = "hashicorp/helm"
+    }
+    random = {
+      source = "hashicorp/random"
+    }
+  }
+}
+
 resource "random_id" "elastic_username" {
   byte_length = 8
 }

@@ -1,17 +1,19 @@
 
 terraform {
   required_providers {
+    kubernetes = {
+      source = "hashicorp/kubernetes"
+    }
+    helm = {
+      source = "hashicorp/helm"
+    }
+    random = {
+      source = "hashicorp/random"
+    }
     keycloak = {
-      source  = "mrparkers/keycloak"
-      version = "3.7.0"
+      source = "mrparkers/keycloak"
     }
   }
-}
-
-provider "keycloak" {
-  client_id     = var.credentials.client_id
-  client_secret = var.credentials.client_secret
-  url           = "https://iam.fdk.codes"
 }
 
 locals {

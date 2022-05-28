@@ -1,9 +1,11 @@
 
 terraform {
   required_providers {
+    kubernetes = {
+      source = "hashicorp/kubernetes"
+    }
     github = {
-      source  = "integrations/github"
-      version = "4.23.0"
+      source = "integrations/github"
     }
   }
 }
@@ -12,13 +14,7 @@ locals {
   name                 = "cicd"
   kubernetes_namespace = "default"
   kubernetes_api_url   = "https://k8s.fdk.codes:6443"
-  github_owner         = "frederiks"
   github_repo_name     = "second-brain"
-}
-
-provider "github" {
-  owner = local.github_owner
-  token = var.github_token
 }
 
 resource "kubernetes_role" "cicd" {

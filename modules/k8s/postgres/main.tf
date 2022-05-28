@@ -1,12 +1,21 @@
 
+terraform {
+  required_providers {
+    kubernetes = {
+      source = "hashicorp/kubernetes"
+    }
+    random = {
+      source = "hashicorp/random"
+    }
+  }
+}
+
 locals {
   # https://raw.githubusercontent.com/reactive-tech/kubegres/v1.15/kubegres.yaml
   rawKubegresManifests      = file("${path.module}/kubegres_operator.yml")
   splitRawKubegresManifests = split("SPLIT_DELIMITER", replace(local.rawKubegresManifests, "/(?m:^---$)/", "SPLIT_DELIMITER"))
   kubegresYamlManifests     = [for rawManifest in local.splitRawKubegresManifests : yamldecode(rawManifest)]
 }
-
-
 
 resource "kubernetes_manifest" "kubegres_namespace" {
   manifest = element(local.kubegresYamlManifests, 0)

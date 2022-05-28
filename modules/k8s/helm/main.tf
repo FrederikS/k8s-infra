@@ -1,50 +1,90 @@
 
 terraform {
   required_providers {
-    helm = {
-      source  = "hashicorp/helm"
-      version = "2.4.1"
+    kubernetes = {
+      source = "hashicorp/kubernetes"
     }
-  }
-}
-
-provider "helm" {
-  kubernetes {
-    config_path    = var.kubernetes_config_path
-    config_context = var.kubernetes_context
+    helm = {
+      source = "hashicorp/helm"
+    }
+    aws = {
+      source = "hashicorp/aws"
+    }
+    random = {
+      source = "hashicorp/random"
+    }
+    keycloak = {
+      source = "mrparkers/keycloak"
+    }
   }
 }
 
 module "cert-manager" {
   source                      = "./cert-manager"
   certmanager_aws_credentials = var.certmanager_aws_credentials
+  providers = {
+    kubernetes = kubernetes
+    helm       = helm
+    aws        = aws
+  }
 }
 
 module "istio" {
   source = "./istio"
+  providers = {
+    kubernetes = kubernetes
+    helm       = helm
+    random     = random
+  }
 }
 
 module "prometheus" {
   source = "./prometheus"
+  providers = {
+    helm = helm
+  }
 }
 
 module "grafana" {
   source = "./grafana"
+  providers = {
+    kubernetes = kubernetes
+    helm       = helm
+    random     = random
+  }
 }
 
 module "elasticsearch" {
   source = "./elasticsearch"
+  providers = {
+    kubernetes = kubernetes
+    helm       = helm
+    random     = random
+  }
 }
 
 module "fluentd" {
   source = "./fluentd"
+  providers = {
+    helm = helm
+  }
 }
 
 module "kibana" {
   source = "./kibana"
+  providers = {
+    kubernetes = kubernetes
+    helm       = helm
+    random     = random
+  }
 }
 
 module "keycloak" {
   source = "./keycloak"
-  credentials = var.keycloak_client_credentials
+  providers = {
+    kubernetes = kubernetes
+    helm       = helm
+    random     = random
+    keycloak   = keycloak
+  }
 }

@@ -1,15 +1,16 @@
 
 terraform {
   required_providers {
+    kubernetes = {
+      source = "hashicorp/kubernetes"
+    }
+    helm = {
+      source = "hashicorp/helm"
+    }
     aws = {
-      source  = "hashicorp/aws"
-      version = "3.70.0"
+      source = "hashicorp/aws"
     }
   }
-}
-
-provider "aws" {
-  region = var.aws_region
 }
 
 resource "aws_iam_policy" "route53_list_change" {

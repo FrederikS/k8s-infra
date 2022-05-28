@@ -1,12 +1,13 @@
 terraform {
   required_providers {
+    kubernetes = {
+      source = "hashicorp/kubernetes"
+    }
     tls = {
-      source  = "hashicorp/tls"
-      version = "3.1.0"
+      source = "hashicorp/tls"
     }
     local = {
-      source  = "hashicorp/local"
-      version = "2.1.0"
+      source = "hashicorp/local"
     }
   }
 }

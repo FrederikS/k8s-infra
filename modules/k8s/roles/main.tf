@@ -1,4 +1,12 @@
 
+terraform {
+  required_providers {
+    kubernetes = {
+      source = "hashicorp/kubernetes"
+    }
+  }
+}
+
 resource "kubernetes_role" "developer" {
   metadata {
     name = "developer"

@@ -1,14 +1,3 @@
-variable "kubernetes_config_path" {
-  type        = string
-  default     = "~/.kube/config"
-  description = "path to kubernetes config"
-}
-
-variable "kubernetes_context" {
-  type        = string
-  default     = "pi-admin"
-  description = "kubernetes context to operate with"
-}
 
 variable "kubernetes_users" {
   type = map(object({
@@ -32,11 +21,4 @@ variable "certmanager_aws_credentials" {
 variable "github_token" {
   type        = string
   description = "token to be used for the github provider"
-}
-
-variable "keycloak_client_credentials" {
-  type = object({
-    client_id     = string
-    client_secret = string
-  })
 }

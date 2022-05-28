@@ -1,20 +1,28 @@
 
 terraform {
   required_providers {
-    grafana = {
-      source  = "grafana/grafana"
-      version = "1.17.0"
+    kubernetes = {
+      source = "hashicorp/kubernetes"
     }
+    helm = {
+      source = "hashicorp/helm"
+    }
+    random = {
+      source = "hashicorp/random"
+    }
+    # grafana = {
+    #   source = "grafana/grafana"
+    # }
   }
 }
 
-provider "grafana" {
-  url = "https://grafana.fdk.codes/"
-  auth = format("%s:%s",
-    random_id.grafana_username.id,
-    random_password.grafana_password.result
-  )
-}
+# provider "grafana" {
+#   url = "https://grafana.fdk.codes/"
+#   auth = format("%s:%s",
+#     random_id.grafana_username.id,
+#     random_password.grafana_password.result
+#   )
+# }
 
 resource "random_id" "grafana_username" {
   byte_length = 8
@@ -61,20 +69,20 @@ resource "helm_release" "grafana" {
   depends_on = [kubernetes_secret.grafana_credentials]
 }
 
-resource "grafana_data_source" "prometheus" {
-  type       = "prometheus"
-  name       = "prometheus"
-  url        = "http://prometheus-server"
-  is_default = true
+# resource "grafana_data_source" "prometheus" {
+#   type       = "prometheus"
+#   name       = "prometheus"
+#   url        = "http://prometheus-server"
+#   is_default = true
 
-  json_data {
-    http_method = "POST"
-  }
-  depends_on = [helm_release.grafana]
-}
+#   json_data {
+#     http_method = "POST"
+#   }
+#   depends_on = [helm_release.grafana]
+# }
 
-resource "grafana_dashboard" "dashboard" {
-  for_each    = fileset(path.module, "dashboard/*")
-  config_json = file("${path.module}/${each.value}")
-  depends_on  = [helm_release.grafana]
-}
+# resource "grafana_dashboard" "dashboard" {
+#   for_each    = fileset(path.module, "dashboard/*")
+#   config_json = file("${path.module}/${each.value}")
+#   depends_on  = [helm_release.grafana]
+# }
