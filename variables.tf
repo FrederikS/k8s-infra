@@ -11,6 +11,18 @@ variable "kubernetes_context" {
   description = "kubernetes context to operate with"
 }
 
+variable "kubernetes_users" {
+  type = map(object({
+    group = string
+  }))
+  description = "users with cluster access"
+  default = {
+    frederik = {
+      group = "devs"
+    }
+  }
+}
+
 variable "certmanager_aws_credentials" {
   type = object({
     access_key_id     = string

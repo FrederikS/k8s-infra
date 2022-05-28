@@ -67,18 +67,110 @@ provider "keycloak" {
   url           = "https://iam.fdk.codes"
 }
 
-module "kubernetes" {
-  source                      = "./modules/k8s"
-  certmanager_aws_credentials = var.certmanager_aws_credentials
-  github_token                = var.github_token
+module "roles" {
+  source = "./modules/roles"
+  providers = {
+    kubernetes = kubernetes
+  }
+}
+
+module "user" {
+  source   = "./modules/user"
+  for_each = var.kubernetes_users
+  name     = each.key
+  group    = each.value.group
+  providers = {
+    kubernetes = kubernetes
+    tls        = tls
+    local      = local
+  }
+}
+
+module "serviceaccounts" {
+  source = "./modules/serviceaccounts"
+  providers = {
+    kubernetes = kubernetes
+    github     = github
+  }
+}
+
+module "postgres" {
+  source = "./modules/postgres"
   providers = {
     kubernetes = kubernetes
     random     = random
-    github     = github
-    tls        = tls
-    local      = local
+  }
+}
+
+module "cert-manager" {
+  source                      = "./modules/cert-manager"
+  certmanager_aws_credentials = var.certmanager_aws_credentials
+  providers = {
+    kubernetes = kubernetes
     helm       = helm
     aws        = aws
+  }
+}
+
+module "istio" {
+  source = "./modules/istio"
+  providers = {
+    kubernetes = kubernetes
+    helm       = helm
+    random     = random
+  }
+}
+
+module "prometheus" {
+  source = "./modules/prometheus"
+  providers = {
+    helm = helm
+  }
+}
+
+module "grafana" {
+  source = "./modules/grafana"
+  providers = {
+    kubernetes = kubernetes
+    helm       = helm
+    random     = random
+  }
+}
+
+module "elasticsearch" {
+  source = "./modules/elasticsearch"
+  providers = {
+    kubernetes = kubernetes
+    helm       = helm
+    random     = random
+  }
+}
+
+module "fluentd" {
+  source = "./modules/fluentd"
+  providers = {
+    helm = helm
+  }
+}
+
+module "kibana" {
+  source = "./modules/kibana"
+  providers = {
+    kubernetes = kubernetes
+    helm       = helm
+    random     = random
+  }
+}
+
+module "keycloak" {
+  source = "./modules/keycloak"
+  providers = {
+    kubernetes = kubernetes
+    helm       = helm
+    random     = random
     keycloak   = keycloak
   }
+  depends_on = [
+    module.postgres
+  ]
 }
