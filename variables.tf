@@ -1,13 +1,11 @@
 
 variable "kubernetes_config_path" {
   type        = string
-  default     = "~/.kube/config"
   description = "path to kubernetes config"
 }
 
 variable "kubernetes_context" {
   type        = string
-  default     = "pi-admin"
   description = "kubernetes context to operate with"
 }
 
@@ -28,6 +26,7 @@ variable "certmanager_aws_credentials" {
     access_key_id     = string
     secret_access_key = string
   })
+  sensitive = true
 }
 
 variable "github_owner" {
@@ -37,6 +36,7 @@ variable "github_owner" {
 variable "github_token" {
   type        = string
   description = "token to be used for the github provider"
+  sensitive   = true
 }
 
 variable "keycloak_client_credentials" {
@@ -44,9 +44,13 @@ variable "keycloak_client_credentials" {
     client_id     = string
     client_secret = string
   })
+  sensitive = true
 }
 
 variable "aws_region" {
-  type    = string
-  default = "eu-central-1"
+  type = string
+}
+
+variable "cert_manager_version" {
+  type = string
 }

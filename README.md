@@ -31,13 +31,20 @@
    kubectl get pods
    ```
 
+## Run
+
+```shell
+terraform -chdir=preinstall apply -var-file=../terraform.tfvars
+terraform apply
+terraform -chdir=postinstall apply -var-file=../terraform.tfvars
+```
+
 ## Known issues
 
 `terraform apply` does not work from scratch since istio CRDs are not known in
 the beginning so that planing is failing. Work around comment
-[this](./modules/k8s/helm/istio/main.tf#L48-L52) on initial run.
-Related [issue](https://github.com/hashicorp/terraform-provider-kubernetes/issues/1367)
-
+[this](./modules/k8s/helm/istio/main.tf#L48-L52) on initial run. Related
+[issue](https://github.com/hashicorp/terraform-provider-kubernetes/issues/1367)
 
 ## TODO
 

@@ -104,6 +104,7 @@ module "postgres" {
 
 module "cert-manager" {
   source                      = "./modules/cert-manager"
+  cert_manager_version        = var.cert_manager_version
   certmanager_aws_credentials = var.certmanager_aws_credentials
   providers = {
     kubernetes = kubernetes

@@ -20,3 +20,7 @@ variable "certmanager_aws_credentials" {
     secret_access_key = string
   })
 }
+
+variable "cert_manager_version" {
+  type = string
+}
