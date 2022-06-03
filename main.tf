@@ -25,10 +25,6 @@ terraform {
       source  = "hashicorp/helm"
       version = "2.4.1"
     }
-    keycloak = {
-      source  = "mrparkers/keycloak"
-      version = "3.7.0"
-    }
     # grafana = {
     #   source  = "grafana/grafana"
     #   version = "1.17.0"
@@ -63,12 +59,6 @@ provider "github" {
 
 provider "aws" {
   region = var.aws_region
-}
-
-provider "keycloak" {
-  client_id     = var.keycloak_client_credentials.client_id
-  client_secret = var.keycloak_client_credentials.client_secret
-  url           = "https://iam.fdk.codes"
 }
 
 module "roles" {
@@ -125,7 +115,6 @@ module "istio" {
   providers = {
     kubernetes = kubernetes
     helm       = helm
-    random     = random
   }
 }
 
@@ -176,7 +165,6 @@ module "keycloak" {
     kubernetes = kubernetes
     helm       = helm
     random     = random
-    keycloak   = keycloak
   }
   depends_on = [
     module.postgres
