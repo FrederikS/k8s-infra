@@ -72,8 +72,8 @@ module "user" {
   }
 }
 
-module "serviceaccounts" {
-  source = "./modules/serviceaccounts"
+module "cicd" {
+  source = "./modules/cicd"
   providers = {
     kubernetes = kubernetes
     github     = github
@@ -101,6 +101,9 @@ module "cert-manager" {
     kubernetes = kubernetes
     helm       = helm
   }
+  depends_on = [
+    module.istio
+  ]
 }
 
 module "istio" {
@@ -126,6 +129,10 @@ module "grafana" {
     helm       = helm
     random     = random
   }
+  depends_on = [
+    module.cert-manager,
+    module.prometheus
+  ]
 }
 
 module "elasticsearch" {
@@ -142,6 +149,9 @@ module "fluentd" {
   providers = {
     helm = helm
   }
+  depends_on = [
+    module.elasticsearch
+  ]
 }
 
 module "kibana" {
@@ -151,6 +161,10 @@ module "kibana" {
     helm       = helm
     random     = random
   }
+  depends_on = [
+    module.cert-manager,
+    module.elasticsearch
+  ]
 }
 
 module "keycloak" {
@@ -161,6 +175,7 @@ module "keycloak" {
     random     = random
   }
   depends_on = [
+    module.cert-manager,
     module.postgres
   ]
 }

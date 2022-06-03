@@ -20,11 +20,11 @@ resource "helm_release" "cert_manager" {
 
   set {
     name  = "installCRDs"
-    value = "true"
+    value = "false"
   }
 }
 
-resource "kubernetes_secret" "aws_cert_manager_credientials" {
+resource "kubernetes_secret" "aws_cert_manager_credentials" {
   metadata {
     name      = "cert-manager-aws-credentials"
     namespace = "istio-ingress"

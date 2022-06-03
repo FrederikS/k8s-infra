@@ -67,6 +67,7 @@ resource "kubernetes_secret" "admin_credentials" {
   }
 
   depends_on = [
+    kubernetes_namespace.keycloak,
     random_id.admin_username,
     random_password.admin_password
   ]

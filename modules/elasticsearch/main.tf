@@ -13,12 +13,22 @@ terraform {
   }
 }
 
+locals {
+  namespace = "logging"
+}
+
 resource "random_id" "elastic_username" {
   byte_length = 8
 }
 
 resource "random_password" "elastic_password" {
   length = 16
+}
+
+resource "kubernetes_namespace" "logging" {
+  metadata {
+    name = local.namespace
+  }
 }
 
 resource "kubernetes_secret" "elastic_credentials" {
@@ -31,6 +41,7 @@ resource "kubernetes_secret" "elastic_credentials" {
     username = random_id.elastic_username.id
     password = random_password.elastic_password.result
   }
+  depends_on = [kubernetes_namespace.logging]
 }
 
 resource "helm_release" "elasticsearch" {
