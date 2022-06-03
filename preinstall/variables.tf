@@ -20,3 +20,15 @@ variable "istio_version" {
 variable "kubegres_version" {
   type = string
 }
+
+variable "aws_region" {
+  type = string
+}
+
+variable "aws_dns_zone_id" {
+  type = string
+}
+
+variable "aws_dns_manager_role_account_arn" {
+  type = string
+}

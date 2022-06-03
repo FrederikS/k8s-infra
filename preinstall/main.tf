@@ -13,6 +13,10 @@ terraform {
       source  = "hashicorp/helm"
       version = "2.4.1"
     }
+    aws = {
+      source  = "hashicorp/aws"
+      version = "3.70.0"
+    }
   }
 }
 
@@ -26,6 +30,57 @@ provider "helm" {
     config_path    = var.kubernetes_config_path
     config_context = var.kubernetes_context
   }
+}
+
+provider "aws" {
+  region = var.aws_region
+}
+
+resource "aws_iam_policy" "route53_list_change" {
+  name   = "Route53ListChangeResourceRecordSetsFdkCodes"
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "route53:GetChange",
+      "Resource": "arn:aws:route53:::change/*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "route53:ChangeResourceRecordSets",
+        "route53:ListResourceRecordSets"
+      ],
+      "Resource": "arn:aws:route53:::hostedzone/${var.aws_dns_zone_id}"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role" "dns_manager" {
+  name                = "dns-manager"
+  assume_role_policy  = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "${var.aws_dns_manager_role_account_arn}"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+EOF
+  managed_policy_arns = [aws_iam_policy.route53_list_change.arn]
+}
+
+output "aws_iam_role_dns_manager_arn" {
+  value = aws_iam_role.dns_manager.arn
 }
 
 data "http" "cert_manager_crds" {
@@ -52,7 +107,8 @@ resource "kubernetes_manifest" "cert_manager_crds" {
 }
 
 resource "kubernetes_manifest" "kubegres_crds" {
-  manifest = local.fixedKubegresCrdsYaml
+  manifest        = local.fixedKubegresCrdsYaml
+  computed_fields = ["metadata.creationTimestamp", "metadata.annotations", "metadata.labels"]
 }
 
 resource "helm_release" "istio-base" {

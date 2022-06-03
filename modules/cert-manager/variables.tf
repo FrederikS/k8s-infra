@@ -1,17 +1,14 @@
 
 variable "aws_region" {
-  type    = string
-  default = "eu-central-1"
+  type = string
 }
 
 variable "aws_dns_zone_id" {
-  type    = string
-  default = "Z02131432BPRD17CWC45P"
+  type = string
 }
 
-variable "aws_dns_manager_role_account_arn" {
-  type    = string
-  default = "arn:aws:iam::172099792315:user/Administrator"
+variable "aws_iam_role_dns_manager_arn" {
+  type = string
 }
 
 variable "certmanager_aws_credentials" {

@@ -29,10 +29,6 @@ terraform {
     #   source  = "grafana/grafana"
     #   version = "1.17.0"
     # }
-    aws = {
-      source  = "hashicorp/aws"
-      version = "3.70.0"
-    }
     http = {
       source  = "hashicorp/http"
       version = "2.2.0"
@@ -55,10 +51,6 @@ provider "helm" {
 provider "github" {
   owner = var.github_owner
   token = var.github_token
-}
-
-provider "aws" {
-  region = var.aws_region
 }
 
 module "roles" {
@@ -99,13 +91,15 @@ module "postgres" {
 }
 
 module "cert-manager" {
-  source                      = "./modules/cert-manager"
-  cert_manager_version        = var.cert_manager_version
-  certmanager_aws_credentials = var.certmanager_aws_credentials
+  source                       = "./modules/cert-manager"
+  cert_manager_version         = var.cert_manager_version
+  certmanager_aws_credentials  = var.certmanager_aws_credentials
+  aws_region                   = var.aws_region
+  aws_dns_zone_id              = var.aws_dns_zone_id
+  aws_iam_role_dns_manager_arn = var.aws_iam_role_dns_manager_arn
   providers = {
     kubernetes = kubernetes
     helm       = helm
-    aws        = aws
   }
 }
 

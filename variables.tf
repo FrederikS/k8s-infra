@@ -47,10 +47,6 @@ variable "keycloak_client_credentials" {
   sensitive = true
 }
 
-variable "aws_region" {
-  type = string
-}
-
 variable "cert_manager_version" {
   type = string
 }
@@ -60,5 +56,17 @@ variable "istio_version" {
 }
 
 variable "kubegres_version" {
+  type = string
+}
+
+variable "aws_region" {
+  type = string
+}
+
+variable "aws_dns_zone_id" {
+  type = string
+}
+
+variable "aws_iam_role_dns_manager_arn" {
   type = string
 }
