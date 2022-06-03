@@ -28,6 +28,11 @@ resource "keycloak_openid_client" "oidc_client_notes_webapp" {
   depends_on = [keycloak_realm.fdk_codes]
 }
 
+output "notes_webapp_client_id" {
+  value     = keycloak_openid_client.oidc_client_notes_webapp.client_id
+  sensitive = true
+}
+
 resource "kubernetes_secret" "client_credentials_notes_webapp" {
   metadata {
     name      = "client-credentials-notes-webapp"

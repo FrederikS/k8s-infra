@@ -36,7 +36,8 @@ module "keycloak" {
 }
 
 module "istio" {
-  source = "./modules/istio"
+  source                          = "./modules/istio"
+  keycloak_notes_webapp_client_id = module.keycloak.notes_webapp_client_id
   providers = {
     kubernetes = kubernetes
     random     = random

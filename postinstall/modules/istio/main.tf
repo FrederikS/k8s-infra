@@ -50,7 +50,7 @@ resource "kubernetes_manifest" "oauth_filter_notes_webapp" {
     "${path.module}/filter/envoy-oauth-filter.yml.tftpl", {
       "name"           = "notes-webapp-oauth-filter",
       "app_name"       = "second-brain",
-      "client_id"      = data.kubernetes_secret.client_credentials_notes_webapp.data.clientId,
+      "client_id"      = var.keycloak_notes_webapp_client_id,
       "token_endpoint" = "${local.internalKeycloakUrl}/auth/realms/fdk-codes/protocol/openid-connect/token",
       "auth_endpoint"  = "${local.keycloakUrl}/auth/realms/fdk-codes/protocol/openid-connect/auth",
     }

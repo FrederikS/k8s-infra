@@ -36,7 +36,7 @@
 ```shell
 terraform -chdir=preinstall apply -var-file=../terraform.tfvars
 terraform apply
-terraform -chdir=postinstall apply -var-file=../terraform.tfvars
+terraform -chdir=postinstall apply -var-file=../terraform.tfvars -var-file=../secrets.auto.tfvars
 ```
 
 ## Known issues
