@@ -37,6 +37,10 @@ terraform {
       source  = "hashicorp/aws"
       version = "3.70.0"
     }
+    http = {
+      source  = "hashicorp/http"
+      version = "2.2.0"
+    }
   }
 }
 
@@ -95,10 +99,12 @@ module "serviceaccounts" {
 }
 
 module "postgres" {
-  source = "./modules/postgres"
+  source           = "./modules/postgres"
+  kubegres_version = var.kubegres_version
   providers = {
     kubernetes = kubernetes
     random     = random
+    http       = http
   }
 }
 

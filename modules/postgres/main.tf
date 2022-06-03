@@ -7,12 +7,18 @@ terraform {
     random = {
       source = "hashicorp/random"
     }
+    http = {
+      source = "hashicorp/http"
+    }
   }
 }
 
+data "http" "kubegres_operator" {
+  url = "https://raw.githubusercontent.com/reactive-tech/kubegres/v${var.kubegres_version}/kubegres.yaml"
+}
+
 locals {
-  # https://raw.githubusercontent.com/reactive-tech/kubegres/v1.15/kubegres.yaml
-  rawKubegresManifests      = file("${path.module}/kubegres_operator.yml")
+  rawKubegresManifests      = data.http.kubegres_operator.body
   splitRawKubegresManifests = split("SPLIT_DELIMITER", replace(local.rawKubegresManifests, "/(?m:^---$)/", "SPLIT_DELIMITER"))
   kubegresYamlManifests     = [for rawManifest in local.splitRawKubegresManifests : yamldecode(rawManifest)]
 }
@@ -22,8 +28,8 @@ resource "kubernetes_manifest" "kubegres_namespace" {
 }
 
 resource "kubernetes_manifest" "kubegres_operator" {
-  count           = length(local.kubegresYamlManifests) - 1
-  manifest        = element(local.kubegresYamlManifests, count.index + 1)
+  count           = length(local.kubegresYamlManifests) - 2
+  manifest        = element(local.kubegresYamlManifests, count.index + 2)
   depends_on      = [kubernetes_manifest.kubegres_namespace]
   computed_fields = ["metadata.creationTimestamp", "metadata.annotations", "metadata.labels"]
 }

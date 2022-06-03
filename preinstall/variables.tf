@@ -16,3 +16,7 @@ variable "cert_manager_version" {
 variable "istio_version" {
   type = string
 }
+
+variable "kubegres_version" {
+  type = string
+}
