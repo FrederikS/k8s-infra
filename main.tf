@@ -114,7 +114,8 @@ module "cert-manager" {
 }
 
 module "istio" {
-  source = "./modules/istio"
+  source        = "./modules/istio"
+  istio_version = var.istio_version
   providers = {
     kubernetes = kubernetes
     helm       = helm

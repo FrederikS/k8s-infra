@@ -12,3 +12,7 @@ variable "kubernetes_context" {
 variable "cert_manager_version" {
   type = string
 }
+
+variable "istio_version" {
+  type = string
+}

@@ -18,43 +18,31 @@ locals {
   keycloakUrl         = "https://iam.fdk.codes"
 }
 
-resource "helm_release" "istio-base" {
-  namespace        = "istio-system"
-  create_namespace = true
-  name             = "istio-base"
-  repository       = var.istio.repository
-  chart            = "base"
-  version          = var.istio.version
-  values           = ["${file("${path.module}/istio-base-values.yml")}"]
-}
-
 resource "helm_release" "istiod" {
   namespace        = "istio-system"
   create_namespace = true
   name             = "istiod"
-  repository       = var.istio.repository
+  repository       = "https://istio-release.storage.googleapis.com/charts"
   chart            = "istiod"
-  version          = var.istio.version
+  version          = var.istio_version
   values           = ["${file("${path.module}/istiod-values.yml")}"]
-  depends_on       = [helm_release.istio-base]
 }
 
 resource "helm_release" "istio_ingress" {
   namespace        = "istio-ingress"
   create_namespace = true
   name             = "istio-ingress"
-  repository       = var.istio.repository
+  repository       = "https://istio-release.storage.googleapis.com/charts"
   chart            = "gateway"
-  version          = var.istio.version
+  version          = var.istio_version
   values           = ["${file("${path.module}/gateway-values.yml")}"]
   depends_on       = [helm_release.istiod]
 }
 
 # https://github.com/hashicorp/terraform-provider-kubernetes/issues/1367
 resource "kubernetes_manifest" "istio_gateway" {
-  for_each   = fileset(path.module, "gateway/*")
-  manifest   = yamldecode(file("${path.module}/${each.value}"))
-  depends_on = [helm_release.istio-base]
+  for_each = fileset(path.module, "gateway/*")
+  manifest = yamldecode(file("${path.module}/${each.value}"))
 }
 
 data "kubernetes_secret" "client_credentials_notes_webapp" {
