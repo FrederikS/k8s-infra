@@ -98,7 +98,12 @@ locals {
   splitRawKubegresManifests = split("SPLIT_DELIMITER", replace(local.rawKubegresManifests, "/(?m:^---$)/", "SPLIT_DELIMITER"))
   rawkubegresCrds           = element(local.splitRawKubegresManifests, 1)
   kubegresCrdsYaml          = yamldecode(local.rawkubegresCrds)
-  fixedKubegresCrdsYaml     = { for k, v in local.kubegresCrdsYaml : k => v if k != "status" }
+  fixedKubegresCrdsYaml = merge({ for k, v in local.kubegresCrdsYaml : k => v if k != "status" }, {
+    metadata = {
+      annotations = local.kubegresCrdsYaml.metadata.annotations
+      name        = local.kubegresCrdsYaml.metadata.name
+    }
+  })
 }
 
 resource "kubernetes_manifest" "cert_manager_crds" {
