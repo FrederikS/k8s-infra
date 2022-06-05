@@ -45,14 +45,17 @@ resource "kubernetes_manifest" "issuer" {
       "access_key_id" = var.certmanager_aws_credentials.access_key_id
     }
   ))
+  depends_on = [helm_release.cert_manager]
 }
 
 resource "kubernetes_manifest" "cert" {
-  manifest = yamldecode(file("${path.module}/cert.yml"))
+  manifest   = yamldecode(file("${path.module}/cert.yml"))
+  depends_on = [kubernetes_manifest.issuer]
 }
 
 resource "kubernetes_manifest" "selfsigned_issuer" {
-  manifest = yamldecode(file("${path.module}/selfsigned_issuer.yml"))
+  manifest   = yamldecode(file("${path.module}/selfsigned_issuer.yml"))
+  depends_on = [helm_release.cert_manager]
 }
 
 resource "kubernetes_manifest" "es_root_ca_cert" {
