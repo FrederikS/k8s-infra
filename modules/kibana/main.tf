@@ -49,4 +49,10 @@ resource "helm_release" "kibana" {
   values           = ["${file("${path.module}/values.yml")}"]
   timeout          = 500
   depends_on       = [kubernetes_secret.kibana_credentials]
+  atomic           = true
+}
+
+resource "kubernetes_manifest" "kibana_cert" {
+  manifest        = yamldecode(file("${path.module}/kibana_cert.yml"))
+  computed_fields = ["spec.isCA"]
 }

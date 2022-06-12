@@ -47,8 +47,9 @@ resource "kubernetes_secret" "db_credentials" {
   ]
 }
 
-resource "random_id" "admin_username" {
-  byte_length = 12
+resource "random_string" "admin_username" {
+  length  = 12
+  special = false
 }
 
 resource "random_password" "admin_password" {
@@ -62,13 +63,13 @@ resource "kubernetes_secret" "admin_credentials" {
   }
 
   data = {
-    user     = random_id.admin_username.id
+    user     = random_string.admin_username.id
     password = random_password.admin_password.result
   }
 
   depends_on = [
     kubernetes_namespace.keycloak,
-    random_id.admin_username,
+    random_string.admin_username,
     random_password.admin_password
   ]
 }

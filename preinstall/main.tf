@@ -124,4 +124,5 @@ resource "helm_release" "istio-base" {
   chart            = "base"
   version          = var.istio_version
   values           = ["${file("${path.module}/istio-base-values.yml")}"]
+  atomic           = true
 }

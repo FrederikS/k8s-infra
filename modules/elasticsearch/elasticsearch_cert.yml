@@ -17,7 +17,7 @@ spec:
     - elasticsearch-master-headless.logging.svc
     - elasticsearch-master-headless.logging.svc.cluster.local
   issuerRef:
-    kind: Issuer
+    kind: ClusterIssuer
     name: root-ca-issuer
   secretName: es-cert
   subject:

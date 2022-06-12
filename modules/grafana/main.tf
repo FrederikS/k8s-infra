@@ -24,8 +24,9 @@ terraform {
 #   )
 # }
 
-resource "random_id" "grafana_username" {
-  byte_length = 8
+resource "random_string" "grafana_username" {
+  length  = 12
+  special = false
 }
 
 resource "random_password" "grafana_password" {
@@ -39,9 +40,14 @@ resource "kubernetes_secret" "grafana_credentials" {
   }
 
   data = {
-    username = random_id.grafana_username.id
+    username = random_string.grafana_username.id
     password = random_password.grafana_password.result
   }
+
+  depends_on = [
+    random_string.grafana_username,
+    random_password.grafana_password
+  ]
 }
 
 resource "helm_release" "grafana" {
@@ -51,6 +57,7 @@ resource "helm_release" "grafana" {
   repository       = "https://grafana.github.io/helm-charts"
   chart            = "grafana"
   version          = "6.23.2"
+  atomic           = true
   set {
     name  = "admin.existingSecret"
     value = "grafana-credentials"

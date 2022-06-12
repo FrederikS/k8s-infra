@@ -17,6 +17,7 @@ resource "helm_release" "cert_manager" {
   repository       = "https://charts.jetstack.io"
   chart            = "cert-manager"
   version          = var.cert_manager_version
+  atomic = true
 
   set {
     name  = "installCRDs"
@@ -58,30 +59,12 @@ resource "kubernetes_manifest" "selfsigned_issuer" {
   depends_on = [helm_release.cert_manager]
 }
 
-resource "kubernetes_manifest" "es_root_ca_cert" {
-  manifest   = yamldecode(file("${path.module}/logging/root_ca_cert.yml"))
+resource "kubernetes_manifest" "root_ca_cert" {
+  manifest   = yamldecode(file("${path.module}/root_ca_cert.yml"))
   depends_on = [kubernetes_manifest.selfsigned_issuer]
 }
 
-resource "kubernetes_manifest" "es_root_ca_issuer" {
-  manifest   = yamldecode(file("${path.module}/logging/root_ca_issuer.yml"))
-  depends_on = [kubernetes_manifest.es_root_ca_cert]
-}
-
-resource "kubernetes_manifest" "es_cert" {
-  manifest        = yamldecode(file("${path.module}/logging/elasticsearch_cert.yml"))
-  computed_fields = ["spec.isCA"]
-  depends_on      = [kubernetes_manifest.es_root_ca_issuer]
-}
-
-resource "kubernetes_manifest" "kibana_cert" {
-  manifest        = yamldecode(file("${path.module}/logging/kibana_cert.yml"))
-  computed_fields = ["spec.isCA"]
-  depends_on      = [kubernetes_manifest.es_root_ca_issuer]
-}
-
-resource "kubernetes_manifest" "fluentd_cert" {
-  manifest        = yamldecode(file("${path.module}/logging/fluentd_cert.yml"))
-  computed_fields = ["spec.isCA"]
-  depends_on      = [kubernetes_manifest.es_root_ca_issuer]
+resource "kubernetes_manifest" "root_ca_issuer" {
+  manifest   = yamldecode(file("${path.module}/root_ca_issuer.yml"))
+  depends_on = [kubernetes_manifest.root_ca_cert]
 }

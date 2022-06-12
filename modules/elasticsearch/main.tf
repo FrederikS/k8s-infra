@@ -53,5 +53,11 @@ resource "helm_release" "elasticsearch" {
   version          = "7.17.1"
   values           = ["${file("${path.module}/values.yml")}"]
   timeout          = 500
+  atomic = true
   depends_on       = [kubernetes_secret.elastic_credentials]
+}
+
+resource "kubernetes_manifest" "es_cert" {
+  manifest        = yamldecode(file("${path.module}/elasticsearch_cert.yml"))
+  computed_fields = ["spec.isCA"]
 }

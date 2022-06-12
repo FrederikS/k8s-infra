@@ -90,6 +90,26 @@ module "postgres" {
   }
 }
 
+module "metallb" {
+  source = "./modules/metallb"
+  providers = {
+    kubernetes = kubernetes
+    helm       = helm
+  }
+}
+
+module "istio" {
+  source        = "./modules/istio"
+  istio_version = var.istio_version
+  providers = {
+    kubernetes = kubernetes
+    helm       = helm
+  }
+  depends_on = [
+    module.metallb
+  ]
+}
+
 module "cert-manager" {
   source                       = "./modules/cert-manager"
   cert_manager_version         = var.cert_manager_version
@@ -104,15 +124,6 @@ module "cert-manager" {
   depends_on = [
     module.istio
   ]
-}
-
-module "istio" {
-  source        = "./modules/istio"
-  istio_version = var.istio_version
-  providers = {
-    kubernetes = kubernetes
-    helm       = helm
-  }
 }
 
 module "prometheus" {
@@ -142,12 +153,16 @@ module "elasticsearch" {
     helm       = helm
     random     = random
   }
+  depends_on = [
+    module.cert-manager
+  ]
 }
 
 module "fluentd" {
   source = "./modules/fluentd"
   providers = {
-    helm = helm
+    kubernetes = kubernetes
+    helm       = helm
   }
   depends_on = [
     module.elasticsearch
@@ -162,7 +177,6 @@ module "kibana" {
     random     = random
   }
   depends_on = [
-    module.cert-manager,
     module.elasticsearch
   ]
 }
@@ -177,5 +191,17 @@ module "keycloak" {
   depends_on = [
     module.cert-manager,
     module.postgres
+  ]
+}
+
+module "pihole" {
+  source = "./modules/pi-hole"
+  providers = {
+    kubernetes = kubernetes
+    helm       = helm
+    random     = random
+  }
+  depends_on = [
+    module.metallb
   ]
 }

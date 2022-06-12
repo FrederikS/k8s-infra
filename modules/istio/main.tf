@@ -18,6 +18,7 @@ resource "helm_release" "istiod" {
   chart            = "istiod"
   version          = var.istio_version
   values           = ["${file("${path.module}/istiod-values.yml")}"]
+  atomic           = true
 }
 
 resource "helm_release" "istio_ingress" {
@@ -28,6 +29,7 @@ resource "helm_release" "istio_ingress" {
   chart            = "gateway"
   version          = var.istio_version
   values           = ["${file("${path.module}/gateway-values.yml")}"]
+  atomic = true
   depends_on       = [helm_release.istiod]
 }
 

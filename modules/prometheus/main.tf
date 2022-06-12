@@ -15,4 +15,5 @@ resource "helm_release" "prometheus" {
   chart            = "prometheus"
   version          = "15.5.3"
   values           = ["${file("${path.module}/values.yml")}"]
+  atomic = true
 }

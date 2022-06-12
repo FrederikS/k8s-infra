@@ -1,7 +1,7 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: fluentd-cert
+  name: kibana-cert
   namespace: logging
 spec:
   isCA: false
@@ -10,13 +10,15 @@ spec:
     encoding: PKCS1
     size: 2048
   dnsNames:
-    - fluentd
-    - fluentd.logging.svc
-    - fluentd.logging.svc.cluster.local
+    - kibana
+    - kibana.logging.svc
+    - kibana.logging.svc.cluster.local
+    - logs.fdk.codes
   issuerRef:
-    kind: Issuer
+    kind: ClusterIssuer
     name: root-ca-issuer
-  secretName: fluentd-cert
+  secretName: kibana-cert
   subject:
     organizations:
-      - fluentd
+      - kibana
+      - logs
