@@ -64,7 +64,7 @@ serviceDns:
 serviceDhcp:
 
   # -- Generate a Service resource for DHCP traffic
-  enabled: true
+  enabled: false
 
   # -- `spec.type` for the DHCP Service
   type: NodePort
@@ -281,7 +281,7 @@ dnsmasq:
 
   # -- Add custom dns entries to override the dns resolution. All lines will be added to the pihole dnsmasq configuration.
   customDnsEntries:
-    - address=/grafana.fdk.codes/192.168.0.201
+    - address=/.fdk.codes/192.168.2.99
   # - address=/bar.foo/192.168.178.11
 
   # -- Dnsmasq reads the /etc/hosts file to resolve ips. You can add additional entries if you like
