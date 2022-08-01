@@ -16,21 +16,19 @@ resource "keycloak_realm" "fdk_codes" {
   ssl_required = "external"
 }
 
-resource "keycloak_openid_client" "oidc_client_notes_webapp" {
-  realm_id              = keycloak_realm.fdk_codes.id
-  client_id             = "notes-web-app"
-  name                  = "notes-web-app"
-  access_type           = "CONFIDENTIAL"
-  standard_flow_enabled = true
-  valid_redirect_uris = [
-    "https://notes.fdk.codes/*"
-  ]
-  depends_on = [keycloak_realm.fdk_codes]
-}
+module "notes_oidc_client" {
+  source   = "./client"
+  realm_id = keycloak_realm.fdk_codes.id
+  name     = "notes-web-app"
+  url      = "https://notes.fdk.codes"
+  role     = "notes-webapp-access"
 
-output "notes_webapp_client_id" {
-  value     = keycloak_openid_client.oidc_client_notes_webapp.client_id
-  sensitive = true
+  providers = {
+    keycloak = keycloak
+  }
+  depends_on = [
+    keycloak_realm.fdk_codes
+  ]
 }
 
 resource "kubernetes_secret" "client_credentials_notes_webapp" {
@@ -40,11 +38,11 @@ resource "kubernetes_secret" "client_credentials_notes_webapp" {
   }
 
   data = {
-    clientId     = keycloak_openid_client.oidc_client_notes_webapp.client_id
-    clientSecret = keycloak_openid_client.oidc_client_notes_webapp.client_secret
+    clientId     = module.notes_oidc_client.client_id
+    clientSecret = module.notes_oidc_client.client_secret
   }
 
-  depends_on = [keycloak_openid_client.oidc_client_notes_webapp]
+  depends_on = [module.notes_oidc_client]
 }
 
 # TODO fixme
@@ -60,21 +58,16 @@ resource "keycloak_user" "fdk" {
   depends_on = [keycloak_realm.fdk_codes]
 }
 
-resource "keycloak_role" "notes_webapp_access" {
-  realm_id = keycloak_realm.fdk_codes.id
-  name     = "notes-webapp-access"
-}
-
 resource "keycloak_user_roles" "fdk" {
   realm_id = keycloak_realm.fdk_codes.id
   user_id  = keycloak_user.fdk.id
 
   role_ids = [
-    keycloak_role.notes_webapp_access.id
+    module.notes_oidc_client.role_id
   ]
 
   depends_on = [
     keycloak_user.fdk,
-    keycloak_role.notes_webapp_access
+    module.notes_oidc_client
   ]
 }
